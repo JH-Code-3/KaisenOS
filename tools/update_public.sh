@@ -32,7 +32,9 @@ while IFS= read -r -d '' f; do
 done < <(git ls-files -z --cached --others --exclude-standard)
 
 cd "$DEST"
-find . -type d -empty -not -path "./.git/*" -delete 2>/dev/null || true
+# Remove folders emptied by deleted files (not inside .git, venvs, node_modules or builds).
+find . \( -path ./.git -o -name .venv -o -name node_modules -o -name dist \) -prune -o -type d -empty -print0 \
+  | xargs -0 rmdir 2>/dev/null || true
 git add -A
 if git diff --cached --quiet; then echo "No changes."; exit 0; fi
 
