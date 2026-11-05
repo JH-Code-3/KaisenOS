@@ -1,0 +1,49 @@
+# ---------------------------------------------------------------
+# KaisenOS: never commit personal data, secrets or machine files.
+# ---------------------------------------------------------------
+
+# Personal data (databases, backups, exports, logs, settings).
+# New installs keep data outside the repo (see src/paths.py); these
+# patterns also cover older installs that kept it in Fitness/data/.
+Fitness/data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+garmin_data.*
+**/garmin_data.*
+**/backups/
+**/exports/
+KaisenOS-export-*
+kaisenos-export-*
+*.log
+
+# Personal plans, spreadsheets and reference material
+Fitness/workouts/
+*.xlsx
+*.xls
+Fitness/knowledge/*.pdf
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Machine-specific
+.claude/settings.local.json
+.DS_Store
+.vscode/
+.idea/
+
+# Python
+Fitness/.venv/
+.venv/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node / build output
+node_modules/
+Fitness/frontend/dist/
