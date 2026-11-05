@@ -132,12 +132,17 @@ def auto_backup_if_due() -> dict | None:
 
 
 def _backup_folder(name: str) -> Path:
-    if not BACKUP_NAME.match(name):
+    """A backup folder by name, guaranteed to be directly inside the backups folder."""
+    if not BACKUP_NAME.fullmatch(name):
         raise ValueError("Not a valid backup name.")
-    folder = (_backup_dir() / name).resolve()
-    if folder.parent != _backup_dir().resolve() or not folder.is_dir():
+    root = os.path.realpath(_backup_dir())
+    full = os.path.realpath(os.path.join(root, name))
+    # Containment check before any other filesystem access.
+    if not full.startswith(root + os.sep) or os.path.dirname(full) != root:
+        raise ValueError("Not a valid backup name.")
+    if not os.path.isdir(full):
         raise LookupError("Backup not found.")
-    return folder
+    return Path(full)
 
 
 def _check_backup_db(path: Path) -> None:

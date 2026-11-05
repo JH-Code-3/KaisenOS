@@ -115,9 +115,11 @@ def dashboard(path: str):
         return JSONResponse(
             {"detail": "Dashboard not built. Run ./setup.sh (or `npm run build` in frontend/)."}, status_code=404
         )
-    # Only files inside dist/ can be served (no path traversal); anything
-    # else is a dashboard route, so return the app shell.
-    candidate = (FRONTEND_DIST / path).resolve()
-    if path and candidate.is_file() and FRONTEND_DIST.resolve() in candidate.parents:
-        return FileResponse(candidate)
+    # Only files inside dist/ can be served (no path traversal): check that
+    # the resolved path is inside dist/ BEFORE touching the filesystem.
+    # Anything else is a dashboard route, so return the app shell.
+    root = os.path.realpath(FRONTEND_DIST)
+    full = os.path.realpath(os.path.join(root, path))
+    if path and full.startswith(root + os.sep) and os.path.isfile(full):
+        return FileResponse(full)
     return FileResponse(index, media_type="text/html")
