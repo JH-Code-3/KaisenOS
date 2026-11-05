@@ -13,7 +13,7 @@ idna==3.19
 ollama==0.6.2
 openpyxl==3.1.5
 opentelemetry-api==1.45.1
-pydantic==2.13.5
+pydantic==2.14.2
 pydantic_core==2.46.5
 pypdf==6.21.4
 python-dotenv==1.2.4
